@@ -1,0 +1,373 @@
+/* AdminOrders.css */
+
+.admin-orders {
+  padding: 3rem 0 5rem;
+}
+
+.admin-orders__header-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-orders__header h1 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.admin-orders__header p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ── Tabs ── */
+.admin-tabs {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0px;
+}
+
+.admin-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-bottom: -1px;
+}
+
+.admin-tab:hover {
+  color: var(--text-primary);
+}
+
+.admin-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.admin-tab__badge {
+  background: var(--pink-500);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+}
+
+/* ── Quick Filters ── */
+.status-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.status-pill {
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.status-pill:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.status-pill.active {
+  background: var(--accent-light, #fce8ed);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Grid & Cards ── */
+.orders-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.order-card {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+/* Card Header */
+.order-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.order-card__id-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.order-id {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.order-date {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Status Selector */
+.order-card__status-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.status-select {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 2rem 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-base);
+}
+
+.select-icon {
+  position: absolute;
+  right: 0.8rem;
+  pointer-events: none;
+  color: inherit;
+}
+
+.status-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+
+/* Status Colors */
+.status--processing { background: rgba(212, 168, 67, 0.1); color: var(--gold-600, #b48600); border-color: rgba(212, 168, 67, 0.3); }
+.status--baking { background: rgba(249, 115, 22, 0.1); color: #c2410c; border-color: rgba(249, 115, 22, 0.3); }
+.status--out-for-delivery { background: rgba(59, 130, 246, 0.1); color: #1d4ed8; border-color: rgba(59, 130, 246, 0.3); }
+.status--delivered { background: rgba(34, 197, 94, 0.1); color: #15803d; border-color: rgba(34, 197, 94, 0.3); }
+.status--cancelled { background: rgba(239, 68, 68, 0.1); color: #b91c1c; border-color: rgba(239, 68, 68, 0.3); }
+
+/* Card Details (Customer, Address, Payment) */
+.order-card__details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.detail-group strong {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.detail-group > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-group svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.address-box {
+  align-items: flex-start !important;
+  line-height: 1.4;
+}
+
+.address-icon {
+  margin-top: 2px;
+}
+
+.payment-info {
+  margin-bottom: 0.5rem;
+}
+
+.payment-status {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+}
+
+.payment--paid { background: rgba(34, 197, 94, 0.15); color: #15803d; }
+.payment--pending { background: rgba(212, 168, 67, 0.15); color: var(--gold-600, #b48600); }
+
+.order-total-large {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Items List */
+.order-card__items {
+  padding: 1.5rem;
+}
+
+.order-card__items > strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin-bottom: 0.85rem;
+}
+
+.items-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.item-row img {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--bg-primary);
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.item-qty-price {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.item-subtotal {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+/* Cancellation Alert */
+.cancellation-alert {
+  background: rgba(212, 89, 111, 0.06);
+  border-top: 1px solid rgba(212, 89, 111, 0.2);
+  padding: 1.25rem 1.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+}
+
+.cancellation-alert__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--pink-600);
+  margin-bottom: 0.5rem;
+}
+
+.cancellation-alert p {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-style: italic;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  word-break: break-word;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+.cancellation-alert__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .order-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .cancellation-alert__actions {
+    flex-direction: column;
+    padding-left: 0;
+  }
+  
+  .cancellation-alert__actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}

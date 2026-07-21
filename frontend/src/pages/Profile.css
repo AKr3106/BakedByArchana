@@ -1,0 +1,325 @@
+/* Profile.css */
+.profile-page {
+  padding: 3rem 0 5rem;
+}
+
+.profile-container {
+  max-width: 860px;
+}
+
+/* Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--pink-600));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(232, 116, 138, 0.35);
+}
+
+.profile-name {
+  font-size: 1.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.profile-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.profile-role-badge--admin {
+  background: rgba(212, 168, 67, 0.1);
+  border-color: rgba(212, 168, 67, 0.3);
+  color: var(--gold-500);
+}
+
+/* Grid */
+.profile-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Sections */
+.profile-section {
+  padding: 1.75rem;
+}
+
+.profile-section__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.3px;
+}
+
+.profile-section--danger {
+  border-color: rgba(212, 89, 111, 0.3);
+}
+
+.profile-section__title--danger {
+  color: var(--pink-500);
+}
+
+/* Details list */
+.profile-details-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.profile-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.profile-detail:last-child {
+  border-bottom: none;
+}
+
+.profile-detail > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.profile-detail div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.profile-detail__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}
+
+.profile-detail__value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Orders */
+.orders-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border-color);
+  gap: 1rem;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-item__name {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.order-item__meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.order-item__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.order-item__price {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.order-item__status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.order-item__status--delivered {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+.order-item__status--processing {
+  background: rgba(212, 168, 67, 0.12);
+  color: var(--gold-500);
+}
+
+/* Danger Zone */
+.danger-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.5rem;
+  background: rgba(212, 89, 111, 0.1);
+  color: var(--pink-500);
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: 1.5px solid rgba(212, 89, 111, 0.3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.btn-danger:hover {
+  background: var(--pink-500);
+  border-color: var(--pink-500);
+  color: white;
+}
+
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.delete-confirm__text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--pink-500);
+}
+
+.delete-confirm__error {
+  font-size: 0.83rem;
+  color: var(--pink-600);
+}
+
+.delete-confirm__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-name {
+    text-align: center;
+  }
+
+  .order-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-item__right {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 0.75rem;
+    align-items: center;
+  }
+}
+
+/* ── Cancellations ── */
+.order-item__actions {
+  margin-top: 0.8rem;
+  width: 100%;
+}
+
+.cancel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.cancel-badge--pending {
+  background: rgba(212, 168, 67, 0.1);
+  color: var(--gold-600, #b48600);
+  border: 1px solid rgba(212, 168, 67, 0.3);
+}
+
+.cancel-badge--rejected {
+  background: rgba(212, 89, 111, 0.1);
+  color: var(--pink-600);
+  border: 1px solid rgba(212, 89, 111, 0.3);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.78rem;
+}
+
+/* ── Cancellation Modal ── */
+.cancel-modal {
+  max-width: 440px !important;
+}
+
+.cancel-modal .modal-body p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}

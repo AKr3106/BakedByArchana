@@ -1,0 +1,43 @@
+// Fix for MongoDB Atlas DNS resolution issues (ECONNREFUSED)
+import dns from "node:dns";
+dns.setServers(["8.8.8.8", "1.1.1.1"]); 
+
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import cookieParser from "cookie-parser"; // Added cookie-parser support
+import connectDB from "./db/db.js";
+import authRoutes from "./routes/auth.routes.js";
+import uploadRoutes from "./routes/upload.routes.js";
+import orderRoutes from "./routes/order.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
+import categoryRoutes, { seedCategories } from "./routes/category.routes.js"; // Added category routes
+
+// Load environment variables
+dotenv.config();
+
+// Initialize the Express app
+const app = express();
+
+// Required Middlewares
+app.use(express.json());
+app.use(cookieParser()); // Parsed cookies middleware active
+app.use(cors());
+
+// Mount routes
+app.use("/api/auth", authRoutes);
+app.use("/api/files", uploadRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/categories", categoryRoutes); // Categories endpoint active
+
+// Specify the PORT
+const PORT = process.env.PORT || 3000;
+
+// Connect to Database and start server
+connectDB().then(async () => {
+    await seedCategories(); // Seed categories on launch if missing
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+});
