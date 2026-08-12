@@ -3,6 +3,8 @@ import crypto from "crypto";
 import Razorpay from "razorpay";
 import { verifyToken, authorizeRoles } from "../middleware/auth.middleware.js";
 import Order from "../models/order.model.js";
+import { sendAdminOrderNotification } from "../utils/emailService.js";
+import { sendWhatsAppOrderConfirmation } from "../utils/whatsappService.js";
 
 const router = express.Router();
 router.use(verifyToken);
@@ -71,6 +73,13 @@ router.post("/verify-payment", async (req, res) => {
         });
 
         await newOrder.save();
+
+        // Asynchronously trigger email and WhatsApp notifications in the background
+        Promise.allSettled([
+            sendAdminOrderNotification(newOrder).catch(err => console.error("Admin email notification failed:", err)),
+            sendWhatsAppOrderConfirmation(newOrder.shippingAddress.phone, newOrder).catch(err => console.error("WhatsApp notification failed:", err))
+        ]);
+
         res.status(201).json({ message: "Order confirmed!", data: newOrder });
     } catch (error) {
         console.error("Error verifying payment:", error);
@@ -102,6 +111,13 @@ router.post("/create-cod", async (req, res) => {
         });
 
         await newOrder.save();
+
+        // Asynchronously trigger email and WhatsApp notifications in the background
+        Promise.allSettled([
+            sendAdminOrderNotification(newOrder).catch(err => console.error("Admin email notification failed:", err)),
+            sendWhatsAppOrderConfirmation(newOrder.shippingAddress.phone, newOrder).catch(err => console.error("WhatsApp notification failed:", err))
+        ]);
+
         res.status(201).json({ message: "Order placed successfully (Cash on Delivery)!", data: newOrder });
     } catch (error) {
         console.error("Error creating COD order:", error);

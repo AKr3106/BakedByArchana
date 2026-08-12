@@ -42,6 +42,17 @@ export default function Profile() {
     fetchOrders();
   }, []);
 
+  useEffect(() => {
+    if (cancelModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [cancelModalOpen]);
+
   const handleRequestCancel = async () => {
     if (!activeCancelOrder || !cancelReason.trim()) return;
     setCancelLoading(true);
@@ -55,7 +66,7 @@ export default function Profile() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Failed to request cancellation');
-      
+
       // Update local state
       setOrders(orders.map(o => o._id === activeCancelOrder._id ? data.data : o));
       setCancelModalOpen(false);
@@ -187,27 +198,27 @@ export default function Profile() {
                         {order.orderStatus || order.status || 'Unknown'}
                       </span>
                     </div>
-                  
-                  {/* Cancellation Row */}
-                  {(order.orderStatus !== 'Delivered' && order.orderStatus !== 'Cancelled') && (
-                    <div className="order-item__actions">
-                      {order.cancellationRequest?.status === 'Pending' && (
-                        <div className="cancel-badge cancel-badge--pending">
-                          <Clock size={14} /> Cancellation Pending Approval
-                        </div>
-                      )}
-                      {order.cancellationRequest?.status === 'Rejected' && (
-                        <div className="cancel-badge cancel-badge--rejected">
-                          <XCircle size={14} /> Cancellation Request Rejected
-                        </div>
-                      )}
-                      {(!order.cancellationRequest || order.cancellationRequest.status === 'None') && (
-                        <button className="btn-secondary btn-sm" onClick={() => openCancelModal(order)}>
-                          Request Cancellation
-                        </button>
-                      )}
-                    </div>
-                  )}
+
+                    {/* Cancellation Row */}
+                    {(order.orderStatus !== 'Delivered' && order.orderStatus !== 'Cancelled') && (
+                      <div className="order-item__actions">
+                        {order.cancellationRequest?.status === 'Pending' && (
+                          <div className="cancel-badge cancel-badge--pending">
+                            <Clock size={14} /> Cancellation Pending Approval
+                          </div>
+                        )}
+                        {order.cancellationRequest?.status === 'Rejected' && (
+                          <div className="cancel-badge cancel-badge--rejected">
+                            <XCircle size={14} /> Cancellation Request Rejected
+                          </div>
+                        )}
+                        {(!order.cancellationRequest || order.cancellationRequest.status === 'None') && (
+                          <button className="btn-secondary btn-sm" onClick={() => openCancelModal(order)}>
+                            Request Cancellation
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -266,40 +277,70 @@ export default function Profile() {
 
       {/* Cancellation Modal */}
       {cancelModalOpen && (
-        <div className="modal-overlay" onClick={() => setCancelModalOpen(false)}>
-          <motion.div 
-            className="modal-content cancel-modal"
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          onClick={() => setCancelModalOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-lg bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-amber-100 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200 p-6 sm:p-8 space-y-4 overflow-visible"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-header">
-              <h3>Request Order Cancellation</h3>
-              <button className="modal-close" onClick={() => setCancelModalOpen(false)}><X size={20} /></button>
+            {/* Close Button */}
+            <button
+              type="button"
+              className="absolute top-4 right-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1"
+              onClick={() => setCancelModalOpen(false)}
+            >
+              <X size={20} />
+            </button>
+
+            {/* Header (Fixed Title Color & Added Top Padding) */}
+            <div className="pt-2">
+              <h3 className="text-lg sm:text-xl font-bold block mb-2 leading-tight" style={{ color: '#fef9f5' }}>
+                Request Order Cancellation
+              </h3>
+              <span className="inline-block px-2.5! py-1! text-xs font-semibold rounded-lg bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/50">
+                #{activeCancelOrder?._id?.slice(-8).toUpperCase()}
+              </span>
             </div>
-            <div className="modal-body">
-              <p>Please provide a reason for cancelling Order <strong>#{activeCancelOrder?._id?.slice(-8).toUpperCase()}</strong>.</p>
-              <textarea 
-                className="input-field" 
-                rows="4" 
+
+            {/* Body */}
+            <div>
+              <p className="text-xs sm:text-sm text-zinc-300!  mb-3!">
+                Please provide a reason for cancelling this order:
+              </p>
+              <textarea
+                className="w-full p-4! text-sm rounded-xl border border-amber-200 dark:border-zinc-700 bg-amber-50/30 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-rose-400 focus:outline-none resize-none min-h-30 transition-all"
                 placeholder="I made a mistake in the delivery address..."
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
-                style={{ marginTop: '1rem', resize: 'vertical' }}
               />
-              {cancelError && <p className="error-text" style={{ marginTop: '0.5rem' }}>{cancelError}</p>}
+              {cancelError && (
+                <p className="mt-2 text-xs text-rose-500 font-medium">
+                  {cancelError}
+                </p>
+              )}
             </div>
-            <div className="modal-footer">
-              <button className="btn-secondary" onClick={() => setCancelModalOpen(false)}>Cancel</button>
-              <button 
-                className="btn-danger" 
+
+            {/* Footer Actions */}
+            <div className="flex items-center justify-end gap-3 border-t border-zinc-100 dark:border-zinc-800 w-full">
+              <button
+                type="button"
+                className="px-4! py-2! text-xs sm:text-sm font-semibold rounded-xl border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                onClick={() => setCancelModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="px-6! py-2! m-1! text-xs sm:text-sm font-semibold rounded-xl bg-rose-500 text-white hover:bg-rose-600 shadow-sm active:scale-95 disabled:opacity-50 transition-all"
                 onClick={handleRequestCancel}
                 disabled={cancelLoading || !cancelReason.trim()}
               >
                 {cancelLoading ? 'Submitting...' : 'Submit Request'}
               </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
     </div>
