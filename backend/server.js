@@ -36,7 +36,14 @@ const PORT = process.env.PORT || 3000;
 // Connect to Database and start server
 connectDB().then(async () => {
     await seedCategories(); // Seed categories on launch if missing
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
+    
+    // Only start the server locally. Vercel will use the exported app instead.
+    if (process.env.NODE_ENV !== "production") {
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    }
 });
+
+// Export app for serverless execution on Vercel
+export default app;
