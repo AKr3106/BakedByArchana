@@ -99,7 +99,7 @@ export default function Navbar() {
               id="open-cart"
             >
               <ShoppingBag size={18} />
-              {count > 0 && (
+              {user && count > 0 && (
                 <motion.span
                   key={count}
                   initial={{ scale: 0 }}

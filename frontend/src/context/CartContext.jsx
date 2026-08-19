@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
@@ -10,6 +10,40 @@ export const CartProvider = ({ children }) => {
 
   const [items, setItems] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  // Sync cart state with logged-in user
+  useEffect(() => {
+    if (user) {
+      // User is logged in: Load their specific cart
+      const key = `cart_${user._id || user.email}`;
+      const stored = localStorage.getItem(key);
+      if (stored) {
+        try {
+          setItems(JSON.parse(stored));
+        } catch (e) {
+          console.error('Failed to parse cart JSON', e);
+          setItems([]);
+        }
+      } else {
+        setItems([]);
+      }
+    } else {
+      // User is logged out: Instantly reset cart state to empty
+      setItems([]);
+    }
+  }, [user]);
+
+  // Save cart state whenever items change (if logged in)
+  useEffect(() => {
+    if (user) {
+      const key = `cart_${user._id || user.email}`;
+      if (items.length > 0) {
+        localStorage.setItem(key, JSON.stringify(items));
+      } else {
+        localStorage.removeItem(key);
+      }
+    }
+  }, [items, user]);
 
   const addItem = useCallback((cake) => {
     setItems((prev) => {
