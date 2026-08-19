@@ -17,12 +17,14 @@ export default function CheckoutModal({ onClose, onSuccess }) {
   const [error, setError] = useState('');
 
   const orderItems = items.map(item => ({
-    cakeId: item._id,
+    cakeId: item._id || item.cakeId,
     name: item.name,
-    price: item.price,
-    quantity: item.qty,
+    price: Number(item.price) || 0,
+    quantity: Number(item.qty || item.quantity) || 1,
     imageUrl: item.imageUrl || item.image || item.url || '',
   }));
+  
+  const totalAmount = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const handleAddressChange = (e) => {
     setAddress(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -37,12 +39,18 @@ export default function CheckoutModal({ onClose, onSuccess }) {
     setLoading(true);
     setError('');
     try {
+      if (totalAmount <= 0 || isNaN(totalAmount)) {
+        setError('Invalid order amount. Please clear your cart and try again.');
+        setLoading(false);
+        return;
+      }
+
       // 1. Create payment intent on server
       const intentRes = await fetch('/api/orders/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ items: orderItems }),
+        body: JSON.stringify({ amount: totalAmount, items: orderItems }),
       });
       const intentData = await intentRes.json();
       if (!intentRes.ok) throw new Error(intentData.message || 'Could not initiate payment.');
@@ -234,14 +242,14 @@ export default function CheckoutModal({ onClose, onSuccess }) {
                 <h3>Order Summary</h3>
 
                 <ul className="checkout-summary__items">
-                  {items.map(item => (
-                    <li key={item._id} className="checkout-summary__item">
-                      <img src={item.imageUrl || item.url || '/logo.png'} alt={item.name} onError={e => { e.target.src = '/logo.png'; }} />
+                  {orderItems.map(item => (
+                    <li key={item.cakeId} className="checkout-summary__item">
+                      <img src={item.imageUrl || '/logo.png'} alt={item.name} onError={e => { e.target.src = '/logo.png'; }} />
                       <div>
                         <span className="checkout-summary__name">{item.name}</span>
-                        <span className="checkout-summary__qty">× {item.qty}</span>
+                        <span className="checkout-summary__qty">× {item.quantity}</span>
                       </div>
-                      <span className="checkout-summary__price">₹{(item.price * item.qty).toLocaleString('en-IN')}</span>
+                      <span className="checkout-summary__price">₹{(item.price * item.quantity).toLocaleString('en-IN')}</span>
                     </li>
                   ))}
                 </ul>
@@ -252,9 +260,9 @@ export default function CheckoutModal({ onClose, onSuccess }) {
                 </div>
 
                 <div className="checkout-summary__totals">
-                  <div><span>Subtotal</span><span>₹{total.toLocaleString('en-IN')}</span></div>
+                  <div><span>Subtotal</span><span>₹{totalAmount.toLocaleString('en-IN')}</span></div>
                   <div><span>Delivery</span><span className="checkout-summary__free">Free</span></div>
-                  <div className="checkout-summary__grand"><span>Total</span><span>₹{total.toLocaleString('en-IN')}</span></div>
+                  <div className="checkout-summary__grand"><span>Total</span><span>₹{totalAmount.toLocaleString('en-IN')}</span></div>
                 </div>
 
                 <div className="checkout-summary__method">

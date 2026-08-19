@@ -20,13 +20,17 @@ const razorpay = new Razorpay({
 // ──────────────────────────────────────────────────────────────────────────────
 router.post("/create-payment-intent", async (req, res) => {
     try {
-        const { items } = req.body;
+        const { items, amount } = req.body;
         if (!items || items.length === 0) {
-            return res.status(400).json({ message: "No items in cart." });
+            return res.status(400).json({ success: false, message: "No items in cart." });
         }
 
-        const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        const amountInPaise = Math.round(totalAmount * 100); // Razorpay expects paise
+        const numericAmount = Number(amount);
+        if (!numericAmount || isNaN(numericAmount) || numericAmount <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid order amount' });
+        }
+
+        const amountInPaise = Math.round(numericAmount * 100); // Razorpay expects paise
 
         const razorpayOrder = await razorpay.orders.create({
             amount: amountInPaise,
