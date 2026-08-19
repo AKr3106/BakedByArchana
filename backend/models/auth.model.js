@@ -28,7 +28,16 @@ const userSchema = new mongoose.Schema(
             type: String,
             enum: ['user', 'admin'],
             default: 'user'
-        }
+        },
+        cart: [
+            {
+                cakeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cake' },
+                name: { type: String, required: true },
+                price: { type: Number, required: true },
+                imageUrl: { type: String },
+                quantity: { type: Number, default: 1 }
+            }
+        ]
     },
     { 
         timestamps: true 

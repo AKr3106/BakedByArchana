@@ -11,68 +11,117 @@ export const CartProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Sync cart state with logged-in user
+  // Sync cart state with logged-in user (MongoDB)
   useEffect(() => {
     if (user) {
-      // User is logged in: Load their specific cart
-      const key = `cart_${user._id || user.email}`;
-      const stored = localStorage.getItem(key);
+      const fetchCart = async () => {
+        try {
+          const res = await fetch('/api/cart', { credentials: 'include' });
+          const data = await res.json();
+          if (res.ok) {
+            // Remap items if needed or just set
+            setItems(data.cart || []);
+          }
+        } catch (e) {
+          console.error('Failed to fetch cart from DB', e);
+          setItems([]);
+        }
+      };
+      fetchCart();
+    } else {
+      // User is logged out: Fall back to guest localStorage
+      const stored = localStorage.getItem('guest_cart');
       if (stored) {
         try {
           setItems(JSON.parse(stored));
         } catch (e) {
-          console.error('Failed to parse cart JSON', e);
           setItems([]);
         }
       } else {
         setItems([]);
       }
-    } else {
-      // User is logged out: Instantly reset cart state to empty
-      setItems([]);
     }
   }, [user]);
 
-  // Save cart state whenever items change (if logged in)
+  // Save guest cart state whenever items change (if logged out)
   useEffect(() => {
-    if (user) {
-      const key = `cart_${user._id || user.email}`;
+    if (!user) {
       if (items.length > 0) {
-        localStorage.setItem(key, JSON.stringify(items));
+        localStorage.setItem('guest_cart', JSON.stringify(items));
       } else {
-        localStorage.removeItem(key);
+        localStorage.removeItem('guest_cart');
       }
     }
   }, [items, user]);
 
+  // Helper to sync to DB for logged in users
+  const syncCartToBackend = async (cartItems) => {
+    if (!user) return;
+    try {
+      await fetch('/api/cart/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ cartItems })
+      });
+    } catch (e) {
+      console.error('Failed to sync cart to backend', e);
+    }
+  };
+
   const addItem = useCallback((cake) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i._id === cake._id);
+      let newItems;
+      const existing = prev.find((i) => i._id === cake._id || (i.cakeId && i.cakeId === cake._id));
       if (existing) {
-        return prev.map((i) =>
-          i._id === cake._id ? { ...i, qty: i.qty + 1 } : i
+        newItems = prev.map((i) =>
+          (i._id === cake._id || i.cakeId === cake._id) ? { ...i, qty: i.qty + 1, quantity: i.qty + 1 } : i
         );
+      } else {
+        // Map cake properties to match schema, but keep _id for frontend compatibility
+        newItems = [...prev, { ...cake, cakeId: cake._id, qty: 1, quantity: 1 }];
       }
-      return [...prev, { ...cake, qty: 1 }];
+      
+      syncCartToBackend(newItems);
+      return newItems;
     });
     setIsOpen(true);
-  }, []);
+  }, [user]); // Re-create when user changes so syncCartToBackend has fresh user
 
   const removeItem = useCallback((id) => {
-    setItems((prev) => prev.filter((i) => i._id !== id));
-  }, []);
+    setItems((prev) => {
+      const newItems = prev.filter((i) => i._id !== id && i.cakeId !== id);
+      syncCartToBackend(newItems);
+      return newItems;
+    });
+  }, [user]);
 
   const updateQty = useCallback((id, qty) => {
-    if (qty <= 0) {
-      setItems((prev) => prev.filter((i) => i._id !== id));
-    } else {
-      setItems((prev) =>
-        prev.map((i) => (i._id === id ? { ...i, qty } : i))
-      );
-    }
-  }, []);
+    setItems((prev) => {
+      let newItems;
+      if (qty <= 0) {
+        newItems = prev.filter((i) => i._id !== id && i.cakeId !== id);
+      } else {
+        newItems = prev.map((i) => ((i._id === id || i.cakeId === id) ? { ...i, qty, quantity: qty } : i));
+      }
+      syncCartToBackend(newItems);
+      return newItems;
+    });
+  }, [user]);
 
-  const clearCart = useCallback(() => setItems([]), []);
+  const clearCart = useCallback(async () => {
+    setItems([]);
+    if (user) {
+      try {
+        await fetch('/api/cart/clear', {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+      } catch (e) {
+        console.error('Failed to clear cart in backend', e);
+      }
+    }
+  }, [user]);
 
   const placeOrder = async (deliveryAddress) => {
     if (!user) {
@@ -82,9 +131,9 @@ export const CartProvider = ({ children }) => {
 
     try {
       const orderItems = items.map(item => ({
-        cakeId: item._id,
+        cakeId: item.cakeId || item._id,
         name: item.name,
-        quantity: item.qty,
+        quantity: item.qty || item.quantity,
         price: item.price
       }));
 
@@ -98,7 +147,7 @@ export const CartProvider = ({ children }) => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Failed to place order');
       
-      clearCart();
+      await clearCart();
       return data;
     } catch (error) {
       console.error('Checkout error:', error);
@@ -106,8 +155,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const total = items.reduce((sum, i) => sum + i.price * i.qty, 0);
-  const count = items.reduce((sum, i) => sum + i.qty, 0);
+  const total = items.reduce((sum, i) => sum + i.price * (i.qty || i.quantity || 1), 0);
+  const count = items.reduce((sum, i) => sum + (i.qty || i.quantity || 1), 0);
 
   return (
     <CartContext.Provider

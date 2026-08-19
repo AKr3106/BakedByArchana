@@ -12,6 +12,7 @@ import uploadRoutes from "./routes/upload.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
 import categoryRoutes, { seedCategories } from "./routes/category.routes.js"; // Added category routes
+import cartRoutes from "./routes/cart.routes.js";
 
 // Environment variables are loaded at the very top via "dotenv/config"
 
@@ -29,6 +30,7 @@ app.use("/api/files", uploadRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/categories", categoryRoutes); // Categories endpoint active
+app.use("/api/cart", cartRoutes);
 
 // Specify the PORT
 const PORT = process.env.PORT || 3000;
