@@ -40,6 +40,12 @@
   color: var(--text-primary);
 }
 
+.checkout-total-price {
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  color: var(--text-primary);
+}
+
 .checkout-modal__close {
   display: flex;
   align-items: center;

@@ -176,7 +176,7 @@
 }
 
 .order-item__price {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);

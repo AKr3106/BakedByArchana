@@ -93,7 +93,9 @@
 }
 
 /* ---- Reset & Base ---- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -120,7 +122,10 @@ body {
 }
 
 /* ---- Typography ---- */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-serif);
   font-weight: 600;
   line-height: 1.2;
@@ -152,7 +157,9 @@ button {
   transition: all var(--transition-base);
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: var(--font-sans);
   outline: none;
   border: none;
@@ -329,9 +336,11 @@ input, textarea, select {
 ::-webkit-scrollbar {
   width: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--bg-secondary);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--cream-300);
   border-radius: 3px;
@@ -346,8 +355,13 @@ input, textarea, select {
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* ---- Page Transition ---- */
@@ -360,6 +374,7 @@ input, textarea, select {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -371,6 +386,7 @@ input, textarea, select {
   .section {
     padding: 3.5rem 0;
   }
+
   .section-desc {
     margin-bottom: 2rem;
   }

@@ -165,11 +165,11 @@ export default function CheckoutModal({ onClose, onSuccess }) {
                 <div className="checkout-form__row">
                   <div className="input-group">
                     <label htmlFor="co-fullName">Full Name</label>
-                    <input id="co-fullName" name="fullName" className="input-field" placeholder="e.g., Priya Sharma" value={address.fullName} onChange={handleAddressChange} required />
+                    <input id="co-fullName" name="fullName" className="input-field" placeholder="Enter Full Name" value={address.fullName} onChange={handleAddressChange} required />
                   </div>
                   <div className="input-group">
                     <label htmlFor="co-phone">Phone Number</label>
-                    <input id="co-phone" name="phone" type="tel" className="input-field" placeholder="+91 98765 43210" value={address.phone} onChange={handleAddressChange} required />
+                    <input id="co-phone" name="phone" type="tel" className="input-field" placeholder="Enter Phone Number" value={address.phone} onChange={handleAddressChange} required />
                   </div>
                 </div>
 

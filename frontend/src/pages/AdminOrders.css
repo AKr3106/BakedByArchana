@@ -248,7 +248,7 @@
 .payment--pending { background: rgba(212, 168, 67, 0.15); color: var(--gold-600, #b48600); }
 
 .order-total-large {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-primary);
