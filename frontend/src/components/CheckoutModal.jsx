@@ -51,13 +51,13 @@ export default function CheckoutModal({ onClose, onSuccess }) {
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: intentData.amount,
-        currency: intentData.currency,
-        name: 'Baked By Archana',
-        description: 'Custom Cake Order',
-        image: '/logo.png',
+        currency: "INR",
+        name: "Baked By Archana",
+        description: "Order Payment",
+        image: "/logo.png",
         order_id: intentData.orderId,
         prefill: { name: address.fullName, contact: address.phone },
-        theme: { color: '#e8748a' },
+        theme: { color: "#f43f5e" },
         handler: async (response) => {
           // 3. Verify signature on server
           const verifyRes = await fetch('/api/orders/verify-payment', {

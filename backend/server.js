@@ -1,9 +1,9 @@
+import "dotenv/config";
 // Fix for MongoDB Atlas DNS resolution issues (ECONNREFUSED)
 import dns from "node:dns";
 dns.setServers(["8.8.8.8", "1.1.1.1"]); 
 
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser"; // Added cookie-parser support
 import connectDB from "./db/db.js";
@@ -13,8 +13,7 @@ import orderRoutes from "./routes/order.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
 import categoryRoutes, { seedCategories } from "./routes/category.routes.js"; // Added category routes
 
-// Load environment variables
-dotenv.config();
+// Environment variables are loaded at the very top via "dotenv/config"
 
 // Initialize the Express app
 const app = express();
