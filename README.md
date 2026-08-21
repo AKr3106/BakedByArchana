@@ -79,15 +79,24 @@ Make sure you have [Node.js](https://nodejs.org/) and [MongoDB](https://www.mong
 
 ```text
 BakedByArchana/
+├── api/                   # Serverless function entry points (e.g., Vercel)
 ├── backend/
-│   ├── models/            # Mongoose Schemas (User, Order)
+│   ├── db/                # Database connection setup
 │   ├── middleware/        # Authentication & Role Authorization
-│   ├── routes/            # Order and User API endpoints
-│   └── server.js          # Entry point
-└── frontend/
-    ├── src/
-    │   ├── components/    # Reusable items (Navbar, CartDrawer, etc.)
-    │   ├── context/       # React Contexts (Auth, Cart, Theme)
-    │   ├── pages/         # Page Views (Home, Menu, Profile, AdminOrders)
-    │   └── App.jsx        # Routing configuration
+│   ├── models/            # Mongoose Schemas (User, Order, Cake, etc.)
+│   ├── routes/            # Express API route handlers
+│   ├── services/          # Business logic and external services
+│   ├── src/               # Additional backend logic
+│   ├── utils/             # Helper utilities
+│   └── server.js          # Main entry point for the backend server
+├── frontend/
+│   └── src/
+│       ├── assets/        # Static assets
+│       ├── components/    # Reusable React components
+│       ├── context/       # React Context providers (Auth, Cart, Theme)
+│       ├── hooks/         # Custom React hooks
+│       ├── pages/         # Main application pages
+│       └── App.jsx        # Application root and routing configuration
+├── vercel.json            # Vercel deployment configuration
+└── package.json           # Root project metadata and scripts
 ```
